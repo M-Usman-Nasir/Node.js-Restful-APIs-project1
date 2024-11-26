@@ -1,0 +1,14 @@
+Resr API - JSON
+GET /users - HtML Document Render ----> Done
+GET /api/users - list all users JSON ----> Done
+// Dynamic Path Parameter
+GET /api/users/:id ----> Done
+id: 01, 02, 03, 04, 05, 06, 07, 08, 09, 10 ----> Variable | Dynamic Path Parameter
+GET /api/user01 - Get the user with id 01 ----> Done
+GET /api/user02 - Get the user with id 02 ----> Done
+
+POST /api/users - Create a new user
+
+PATCH /api/users/1 - Update or Edit the user with id 01
+
+DELETE /api/users/1 - Delete the user with id 01

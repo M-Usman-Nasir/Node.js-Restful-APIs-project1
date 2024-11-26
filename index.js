@@ -10,24 +10,24 @@ const port = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: false }));
 // app.use(express.json()); // Use JSON middleware to handle JSON request bodies
 
-app.use((req, res, next) => {
-  fs.appendFile(
-    "log.txt",
-    `${new Date().toISOString()} - ${req.method} ${req.url}\n`,
+// app.use((req, res, next) => {
+//   fs.appendFile(
+//     "log.txt",
+//     `${new Date().toISOString()} - ${req.method} ${req.url}\n`,
     // `${Date.now()} - ${req.method} ${req.path}\n`,
-    (err, data) => {
-      next();
-      if (err) {
-        console.error(err);
-      }
-      console.log("Log file updated");
-    }
+    // (err, data) => {
+    //   next();
+    //   if (err) {
+    //     console.error(err);
+    //   }
+      // console.log("Log file updated");
+    // }
     
-  )
+  // )
   // console.log("Assalom alaykum from Middleware 1");
   // return res.json({ message: "Hello from Middleware 1" });
-  next();
-});
+//   next();
+// });
 
 // Routes
 app.get("/users", (req, res) => {
@@ -41,6 +41,10 @@ app.get("/users", (req, res) => {
 
 // REST API
 app.get("/api/users", (req, res) => {
+  // res.setHeader("x-Content-Type", "application/json");
+  // res.setHeader("x-name", "Usman");
+  // Always add "X" to custom headers
+  // console.log(req.headers);
   return res.json(users);
 });
 
@@ -98,13 +102,16 @@ app
 app.post("/api/users", (req, res) => {
   // Create a new user
   const body = req.body;
+  if (!body.first_name ||!body.last_name || !body.email || !body.gender || !body.job_title) {
+    return res.status(400).json({ error: "All fields are required..." });
+  }
   users.push({ ...body, id: users.length + 1 });
   fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err, data) => {
-    return res.json({ status: "success", id: users.length });
+    return res.status(201).json({ status: "success", id: users.length });
   });
   // console.log("Body", body);
 });
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port} !`);
+  console.log(`App listening on port ${port} ! http://localhost:3000/api/users`);
 });

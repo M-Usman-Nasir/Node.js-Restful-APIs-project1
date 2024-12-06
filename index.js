@@ -1,10 +1,25 @@
 const fs = require("fs");
 const express = require("express");
+const mongoose = require("mongoose");
 
 // Mock data for demonstration purposes
 const users = require("./MOCK_DATA.json");
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Schema
+const userSchema = new mongoose.Schema({
+  first_name: { type: String, required: true }, // first_name: String,
+  last_name: { type: String }, // last_name: String,
+  email: { type: String, required: true, unique: true }, // email: String,
+  gender: { type: String }, // gender: String,
+  job_title: { type: String }, // job_title: String,
+  ip_address: String,
+  id: Number,
+});
+
+// Model
+const User = mongoose.model("User", userSchema);
 
 // Middleware - Plugin
 app.use(express.urlencoded({ extended: false }));
@@ -14,18 +29,18 @@ app.use(express.urlencoded({ extended: false }));
 //   fs.appendFile(
 //     "log.txt",
 //     `${new Date().toISOString()} - ${req.method} ${req.url}\n`,
-    // `${Date.now()} - ${req.method} ${req.path}\n`,
-    // (err, data) => {
-    //   next();
-    //   if (err) {
-    //     console.error(err);
-    //   }
-      // console.log("Log file updated");
-    // }
-    
-  // )
-  // console.log("Assalom alaykum from Middleware 1");
-  // return res.json({ message: "Hello from Middleware 1" });
+// `${Date.now()} - ${req.method} ${req.path}\n`,
+// (err, data) => {
+//   next();
+//   if (err) {
+//     console.error(err);
+//   }
+// console.log("Log file updated");
+// }
+
+// )
+// console.log("Assalom alaykum from Middleware 1");
+// return res.json({ message: "Hello from Middleware 1" });
 //   next();
 // });
 
@@ -102,7 +117,13 @@ app
 app.post("/api/users", (req, res) => {
   // Create a new user
   const body = req.body;
-  if (!body.first_name ||!body.last_name || !body.email || !body.gender || !body.job_title) {
+  if (
+    !body.first_name ||
+    !body.last_name ||
+    !body.email ||
+    !body.gender ||
+    !body.job_title
+  ) {
     return res.status(400).json({ error: "All fields are required..." });
   }
   users.push({ ...body, id: users.length + 1 });
@@ -113,5 +134,7 @@ app.post("/api/users", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port} ! http://localhost:3000/api/users`);
+  console.log(
+    `App listening on port ${port} ! http://localhost:3000/api/users`
+  );
 });

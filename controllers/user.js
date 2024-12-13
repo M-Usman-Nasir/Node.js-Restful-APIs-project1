@@ -14,7 +14,7 @@ async function handleGetUserById(req, res) {
 }
 
 async function handleUpdateUserById(req, res) {
-    await User.findByIdAndUpdate(req.params.id, { last_name: "Usman Nasir" });
+    await User.findByIdAndUpdate(req.params.id, { last_name: "Changed" });
     return res.json({ status: "Success" });
 }
 

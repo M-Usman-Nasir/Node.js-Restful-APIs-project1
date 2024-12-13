@@ -1,12 +1,16 @@
 const fs = require('fs').promises;
 
-async function logReqRes (req, res, next) {
-  try {
-    await fs.appendFile('log.txt', `${Date.now()} - ${req.method} ${req.url}\n`);
-  } catch (err) {
-    console.error('Error writing to log file:', err);
-  }
-  next();
-}
+const logReqRes = (logFilePath) => {
+  return (req, res, next) => {
+    const log = `Request: ${req.method} ${req.url}\nResponse Status: ${res.statusCode} \n date: ${Date.now()}\n\n`;
+    fs.appendFile(logFilePath, log, (err) => {
+      if (err) {
+        console.error("Failed to write log:", err);
+      }
+    });
+    next();
+  };
+};
 
+// Example usage:
 module.exports = {logReqRes};
